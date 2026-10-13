@@ -270,7 +270,7 @@ This project is licensed under the **ISC License**. See the `LICENSE` file for d
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by Siddhu & contributors</sub>
+  <sub>Built with ❤️ by bidhuripriyanshu& contributors</sub>
 </div>
 
 
