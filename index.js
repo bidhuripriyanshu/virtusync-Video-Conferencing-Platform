@@ -47,18 +47,22 @@ app.use(function(req, res, next) {
   res.locals.user = req.user;
   next();
 });
-
+ 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-const db = new pg.Client({
+const db = new pg.Pool({
   connectionString: process.env.DB_URL || `postgres://${process.env.PG_USER}:${process.env.PG_PASSWORD}@${process.env.PG_HOST}:${process.env.PG_PORT}/${process.env.PG_DATABASE}`,
   ssl: {
     rejectUnauthorized: false
   }
 });
 
-db.connect()
+db.on('error', (err) => {
+  console.error("Unexpected error on idle database client:", err.message);
+});
+
+db.query('SELECT NOW()')
   .then(() => console.log("Database connected successfully."))
   .catch(err => console.error("Database connection error:", err));
 
@@ -229,6 +233,15 @@ app.get('/calling', (req, res) => {
         roomId,
         audioOnly
     });
+});
+
+app.get('/ice-config', (req, res) => {
+  res.json({
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' }
+    ]
+  });
 });
 
 app.get("/login", (req, res) => {
